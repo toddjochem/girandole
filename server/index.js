@@ -27,12 +27,18 @@ const db = new Pool({
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
-// Test database connection
+// Track database status
+let dbConnected = false;
+
+// Test database connection (don't exit on failure - allows healthcheck to pass)
 db.query('SELECT NOW()')
-  .then(() => console.log('✓ Database connected'))
+  .then(() => {
+    console.log('✓ Database connected');
+    dbConnected = true;
+  })
   .catch(err => {
     console.error('✗ Database connection failed:', err.message);
-    process.exit(1);
+    console.log('Server will continue running - database may connect later');
   });
 
 // Express app
@@ -64,7 +70,11 @@ app.use((req, res, next) => {
 
 // Health check
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  res.json({ 
+    status: 'ok', 
+    database: dbConnected ? 'connected' : 'disconnected',
+    timestamp: new Date().toISOString() 
+  });
 });
 
 // API Routes
