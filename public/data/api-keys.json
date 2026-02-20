@@ -1,0 +1,13 @@
+{
+  "description": "Maps API keys to their listings. Updated via webhook when new submissions arrive.",
+  "keys": {
+    "gir_jfp_founding_member": {
+      "endpoint": "https://jochemfamilypress.com/api/books.json",
+      "name": "Jochem Family Press",
+      "contact": "toddjochem@gmail.com",
+      "tier": "verified",
+      "createdAt": "2026-02-17T00:00:00Z",
+      "badges": ["verified", "fast", "claimed"]
+    }
+  }
+}

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Directory — Girandole</title>
+  <meta name="description" content="Browse all agent-friendly APIs in the Girandole registry.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='20' stroke='%2394a3b8' stroke-width='2' fill='none'/><circle cx='32' cy='32' r='6' fill='%23dc2626'/><circle cx='32' cy='8' r='4' fill='%23dc2626'/><circle cx='32' cy='56' r='4' fill='%23dc2626'/><circle cx='8' cy='32' r='4' fill='%23dc2626'/><circle cx='56' cy='32' r='4' fill='%23dc2626'/><circle cx='15' cy='15' r='3' fill='%23dc2626' opacity='0.6'/><circle cx='49' cy='15' r='3' fill='%23dc2626' opacity='0.6'/><circle cx='15' cy='49' r='3' fill='%23dc2626' opacity='0.6'/><circle cx='49' cy='49' r='3' fill='%23dc2626' opacity='0.6'/></svg>">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg-card: #12121a;
+      --text: #e8e6e3;
+      --text-dim: #94a3b8;
+      --accent: #dc2626;
+      --accent-glow: #ef4444;
+      --border: #2a2a35;
+      --success: #22c55e;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 2rem; }
+    
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    .header .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .header .logo-icon { font-size: 1.5rem; }
+    .header .logo-text { font-size: 1.25rem; font-weight: 600; }
+    .header .logo-text span { color: var(--accent); }
+    .header nav { display: flex; gap: 1.5rem; }
+    .header nav a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .header nav a:hover { color: var(--accent); }
+    
+    /* Filters */
+    .filters {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    .filter-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .search-box {
+      flex: 1;
+      min-width: 200px;
+      padding: 0.5rem 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+    .search-box:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    
+    /* Directory */
+    .directory-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .directory-header h1 { font-size: 1.5rem; }
+    .api-count { color: var(--text-dim); font-size: 0.9rem; }
+    
+    .api-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .api-card.sample {
+      border-style: dashed;
+      opacity: 0.7;
+    }
+    .api-card.sample::after {
+      content: "SAMPLE";
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: var(--border);
+      color: var(--text-dim);
+      font-size: 0.6rem;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+    .api-card { position: relative; }
+    .api-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .api-info h3 { 
+      font-size: 1.1rem; 
+      margin-bottom: 0.25rem;
+    }
+    .api-badges {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      background: #1a1a24;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+    .badge.verified { border-color: var(--success); color: var(--success); }
+    .badge.fast { border-color: #f59e0b; color: #f59e0b; }
+    .badge.claimed { border-color: #8b5cf6; color: #8b5cf6; }
+    .badge.featured { border-color: var(--accent); color: var(--accent); }
+    .badge.reliable { border-color: var(--success); color: var(--success); }
+    .badge.sample-badge { border-color: var(--border); color: var(--text-dim); }
+    .api-info .category {
+      color: var(--accent);
+      font-size: 0.85rem;
+      margin-bottom: 0.25rem;
+    }
+    .api-info p { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 0.75rem; }
+    .api-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .api-endpoint {
+      font-family: monospace;
+      font-size: 0.8rem;
+      background: #1a1a24;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      color: var(--text-dim);
+    }
+    .api-health {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+    .api-health .online { color: var(--success); }
+    .api-health .sample { color: var(--text-dim); font-style: italic; }
+    
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    
+    @media (max-width: 600px) {
+      .header { flex-direction: column; gap: 1rem; }
+      .api-header { flex-direction: column; }
+      .api-meta { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <a href="/" class="logo">
+        <span class="logo-icon">🕯️</span>
+        <span class="logo-text"><span>Girandole</span></span>
+      </a>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/directory.html">Directory</a>
+        <a href="/#pricing">Pricing</a>
+        <a href="/#submit">List Your API</a>
+      </nav>
+    </header>
+    
+    <div class="directory-header">
+      <h1>API Directory</h1>
+      <span class="api-count">6 APIs listed</span>
+    </div>
+    
+    <div class="filters">
+      <input type="text" class="search-box" placeholder="Search APIs..." id="search">
+      <button class="filter-btn active" data-category="all">All</button>
+      <button class="filter-btn" data-category="books">📚 Books</button>
+      <button class="filter-btn" data-category="products">🛍️ Products</button>
+      <button class="filter-btn" data-category="services">🔧 Services</button>
+      <button class="filter-btn" data-category="data">📊 Data</button>
+      <button class="filter-btn" data-category="tools">🛠️ Tools</button>
+      <button class="filter-btn" data-category="inference">🤖 AI</button>
+    </div>
+    
+    <div id="directory">
+      <!-- Real API -->
+      <div class="api-card" data-category="books">
+        <div class="api-header">
+          <div class="api-info">
+            <div class="category">📚 Books</div>
+            <h3>Jochem Family Press</h3>
+          </div>
+          <div class="api-badges">
+            <span class="badge verified">✓ Verified</span>
+            <span class="badge fast">⚡ Fast</span>
+            <span class="badge claimed">👤 Claimed</span>
+          </div>
+        </div>
+        <p>Memoir series about robotics, self-driving cars, small-town Indiana. Includes "Driven" — the story of No Hands Across America (1995).</p>
+        <div class="api-meta">
+          <code class="api-endpoint">jochemfamilypress.com/api/books.json</code>
+          <div class="api-health">
+            <span class="online">● Online</span>
+            <span>348ms avg</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Sample APIs -->
+      <div class="api-card sample" data-category="products">
+        <div class="api-header">
+          <div class="api-info">
+            <div class="category">🛍️ Products</div>
+            <h3>Artisan Coffee Co.</h3>
+          </div>
+          <div class="api-badges">
+            <span class="badge verified">✓ Verified</span>
+            <span class="badge sample-badge">Sample</span>
+          </div>
+        </div>
+        <p>Small-batch roasted coffee beans from around the world. API includes origins, roast profiles, tasting notes, and purchase links.</p>
+        <div class="api-meta">
+          <code class="api-endpoint">example.com/api/coffee.json</code>
+          <div class="api-health">
+            <span class="sample">Sample listing</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="api-card sample" data-category="data">
+        <div class="api-header">
+          <div class="api-info">
+            <div class="category">📊 Data</div>
+            <h3>Weather Trends API</h3>
+          </div>
+          <div class="api-badges">
+            <span class="badge verified">✓ Verified</span>
+            <span class="badge fast">⚡ Fast</span>
+            <span class="badge sample-badge">Sample</span>
+          </div>
+        </div>
+        <p>Historical weather data and forecasts. Agents can query by location to help users plan trips, events, or daily activities.</p>
+        <div class="api-meta">
+          <code class="api-endpoint">example.com/api/weather.json</code>
+          <div class="api-health">
+            <span class="sample">Sample listing</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="api-card sample" data-category="services">
+        <div class="api-header">
+          <div class="api-info">
+            <div class="category">🔧 Services</div>
+            <h3>Local Handyman Network</h3>
+          </div>
+          <div class="api-badges">
+            <span class="badge verified">✓ Verified</span>
+            <span class="badge claimed">👤 Claimed</span>
+            <span class="badge sample-badge">Sample</span>
+          </div>
+        </div>
+        <p>Connect with vetted local handymen for home repairs. API returns availability, ratings, specialties, and booking links by zip code.</p>
+        <div class="api-meta">
+          <code class="api-endpoint">example.com/api/handyman.json</code>
+          <div class="api-health">
+            <span class="sample">Sample listing</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="api-card sample" data-category="tools">
+        <div class="api-header">
+          <div class="api-info">
+            <div class="category">🛠️ Tools</div>
+            <h3>Code Snippet Library</h3>
+          </div>
+          <div class="api-badges">
+            <span class="badge verified">✓ Verified</span>
+            <span class="badge fast">⚡ Fast</span>
+            <span class="badge reliable">🟢 Reliable</span>
+            <span class="badge sample-badge">Sample</span>
+          </div>
+        </div>
+        <p>Curated code snippets for common programming tasks. Searchable by language, framework, and use case. MIT licensed.</p>
+        <div class="api-meta">
+          <code class="api-endpoint">example.com/api/snippets.json</code>
+          <div class="api-health">
+            <span class="sample">Sample listing</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="api-card sample" data-category="books">
+        <div class="api-header">
+          <div class="api-info">
+            <div class="category">📚 Books</div>
+            <h3>Indie Sci-Fi Catalog</h3>
+          </div>
+          <div class="api-badges">
+            <span class="badge verified">✓ Verified</span>
+            <span class="badge sample-badge">Sample</span>
+          </div>
+        </div>
+        <p>Independent science fiction and fantasy books. Includes synopses, author bios, reviews, and links to purchase direct from authors.</p>
+        <div class="api-meta">
+          <code class="api-endpoint">example.com/api/scifi-books.json</code>
+          <div class="api-health">
+            <span class="sample">Sample listing</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <footer>
+      <p>Built by <a href="https://airatelier.ai">ai/r — Air Atelier</a></p>
+      <p style="margin-top: 0.5rem;"><a href="/#submit">List your API</a> — Sample listings shown for illustration</p>
+    </footer>
+  </div>
+  
+  <script>
+    // Filter functionality
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.api-card');
+    const searchBox = document.getElementById('search');
+    
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        filterCards();
+      });
+    });
+    
+    searchBox.addEventListener('input', filterCards);
+    
+    function filterCards() {
+      const category = document.querySelector('.filter-btn.active').dataset.category;
+      const search = searchBox.value.toLowerCase();
+      
+      cards.forEach(card => {
+        const matchesCategory = category === 'all' || card.dataset.category === category;
+        const matchesSearch = !search || card.textContent.toLowerCase().includes(search);
+        card.style.display = matchesCategory && matchesSearch ? 'block' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>

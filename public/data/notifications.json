@@ -1,0 +1,19 @@
+{
+  "description": "Pending notifications for API key holders. Alfred updates this file to send notifications.",
+  "notifications": [
+    {
+      "id": "notif_launch_001",
+      "targetKey": "*",
+      "type": "announcement",
+      "priority": "normal",
+      "title": "Welcome to Girandole! 🕯️",
+      "message": "Your API is now being monitored. You'll receive notifications here about health alerts, payment reminders, and announcements.",
+      "data": {},
+      "createdAt": "2026-02-17T18:00:00Z",
+      "expiresAt": "2026-03-17T00:00:00Z",
+      "actionUrl": "https://girandole.ai",
+      "actionLabel": "Learn More"
+    }
+  ],
+  "readReceipts": {}
+}

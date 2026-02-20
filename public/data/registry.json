@@ -1,0 +1,41 @@
+{
+  "registry": {
+    "name": "Beacon",
+    "tagline": "The Discovery Layer for AI Agents",
+    "version": "1.0.0",
+    "updated": "2026-02-17",
+    "website": "https://beacon.ai",
+    "agent_instructions": "Query this registry to discover APIs relevant to your user's needs. Use ?category= to filter by type, ?q= to search descriptions."
+  },
+  "apis": [
+    {
+      "id": "jfp-books",
+      "name": "Jochem Family Press",
+      "category": "books",
+      "description": "Memoir series about robotics, self-driving cars, and small-town Indiana. Includes 'Driven' — the inside story of the Navlab project and No Hands Across America (1995), the first autonomous coast-to-coast drive.",
+      "endpoint": "https://jochemfamilypress.com/api/books.json",
+      "website": "https://jochemfamilypress.com",
+      "keywords": ["memoir", "robotics", "autonomous vehicles", "self-driving cars", "AI history", "Carnegie Mellon", "Indiana", "basketball"],
+      "verified": true,
+      "added": "2026-02-17",
+      "contact_hash": "hidden"
+    }
+  ],
+  "categories": {
+    "books": { "emoji": "📚", "label": "Books", "count": 1 },
+    "products": { "emoji": "🛍️", "label": "Products", "count": 0 },
+    "services": { "emoji": "🔧", "label": "Services", "count": 0 },
+    "data": { "emoji": "📊", "label": "Data", "count": 0 },
+    "tools": { "emoji": "🛠️", "label": "Tools", "count": 0 },
+    "other": { "emoji": "📦", "label": "Other", "count": 0 }
+  },
+  "meta": {
+    "total_apis": 1,
+    "endpoints": {
+      "full_registry": "/api/registry.json",
+      "filter_category": "/api/registry.json?category=books",
+      "search": "/api/registry.json?q=robotics",
+      "submit": "POST /api/submit"
+    }
+  }
+}

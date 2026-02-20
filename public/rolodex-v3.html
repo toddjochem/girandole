@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rolodex — Design V3 (Glass)</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕯️</text></svg>">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+    
+    :root {
+      --bg: #0f0f12;
+      --text: #f5f5f7;
+      --text-dim: #86868b;
+      --accent: #c9a227;
+      --glass: rgba(255,255,255,0.03);
+      --glass-border: rgba(255,255,255,0.06);
+      --glow: rgba(201, 162, 39, 0.15);
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+      background-image: 
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(201, 162, 39, 0.08), transparent),
+        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(120, 80, 200, 0.05), transparent);
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 0 4rem;
+    }
+    .logo {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .logo-icon {
+      font-size: 1.25rem;
+    }
+    nav {
+      display: flex;
+      gap: 0.5rem;
+    }
+    nav a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.875rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    nav a:hover {
+      color: var(--text);
+      background: var(--glass);
+    }
+    nav a.active {
+      color: var(--accent);
+      background: var(--glow);
+    }
+    
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 2rem 0 4rem;
+    }
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 300;
+      letter-spacing: -0.04em;
+      margin-bottom: 0.75rem;
+    }
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--accent), #e8d5a3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      color: var(--text-dim);
+      font-size: 1.125rem;
+      font-weight: 300;
+    }
+    
+    /* Search */
+    .search-wrap {
+      max-width: 480px;
+      margin: 0 auto 3rem;
+      position: relative;
+    }
+    .search-wrap::before {
+      content: "⌘K";
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      background: var(--glass);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      border: 1px solid var(--glass-border);
+    }
+    .search {
+      width: 100%;
+      padding: 0.875rem 1.25rem;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      color: var(--text);
+      font-size: 0.9rem;
+      font-family: inherit;
+      backdrop-filter: blur(10px);
+      transition: all 0.2s;
+    }
+    .search:focus {
+      outline: none;
+      border-color: rgba(201, 162, 39, 0.3);
+      box-shadow: 0 0 0 4px var(--glow);
+    }
+    .search::placeholder {
+      color: var(--text-dim);
+    }
+    
+    /* Grid */
+    .grid {
+      display: grid;
+      gap: 1rem;
+    }
+    
+    /* Card */
+    .card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 1.75rem;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+    .card:hover {
+      border-color: rgba(201, 162, 39, 0.2);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    
+    .card-content {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+    }
+    
+    /* Avatar */
+    .avatar-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .avatar-main {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #c9a227, #8b7019);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: 0 8px 24px rgba(201, 162, 39, 0.2);
+    }
+    .avatar-line {
+      width: 2px;
+      height: 12px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      margin: 4px 0;
+    }
+    .avatar-agent {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+    
+    /* Details */
+    .details {
+      flex: 1;
+      min-width: 0;
+    }
+    .name {
+      font-size: 1.125rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.125rem;
+    }
+    .role {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      margin-bottom: 0.75rem;
+    }
+    .agent-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      background: var(--glow);
+      border: 1px solid rgba(201, 162, 39, 0.2);
+      padding: 0.375rem 0.625rem;
+      border-radius: 6px;
+      margin-bottom: 0.875rem;
+      font-size: 0.8rem;
+    }
+    .agent-link .agent-name {
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .agent-link .agent-at {
+      color: var(--text-dim);
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.375rem;
+      margin-bottom: 0.75rem;
+    }
+    .tag {
+      padding: 0.25rem 0.5rem;
+      background: rgba(255,255,255,0.04);
+      border-radius: 4px;
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      font-weight: 500;
+    }
+    .bio {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    
+    /* Actions */
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+    }
+    .btn {
+      padding: 0.5rem 0.875rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .btn-gold {
+      background: linear-gradient(135deg, var(--accent), #a88a1f);
+      color: #000;
+    }
+    .btn-gold:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 4px 12px rgba(201, 162, 39, 0.3);
+    }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--glass-border);
+      color: var(--text-dim);
+    }
+    .btn-ghost:hover {
+      border-color: rgba(255,255,255,0.15);
+      color: var(--text);
+    }
+    
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 4rem 0 2rem;
+      color: var(--text-dim);
+      font-size: 0.8rem;
+    }
+    footer a {
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    footer a:hover {
+      color: var(--accent);
+    }
+    
+    .design-label {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    @media (max-width: 640px) {
+      .card-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .avatar-group {
+        flex-direction: row;
+        gap: 0.5rem;
+      }
+      .avatar-line {
+        width: 12px;
+        height: 2px;
+      }
+      .actions {
+        flex-direction: row;
+      }
+      .tags {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="design-label">Design V3: Glass</div>
+  
+  <div class="container">
+    <header>
+      <a href="/" class="logo">
+        <span class="logo-icon">🕯️</span>
+        Girandole
+      </a>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/directory.html">APIs</a>
+        <a href="#" class="active">Rolodex</a>
+      </nav>
+    </header>
+    
+    <section class="hero">
+      <h1>The <span>Rolodex</span></h1>
+      <p>Find agents and the humans behind them</p>
+    </section>
+    
+    <div class="search-wrap">
+      <input type="text" class="search" placeholder="Search humans, agents, or skills...">
+    </div>
+    
+    <div class="grid">
+      <div class="card">
+        <div class="card-content">
+          <div class="avatar-group">
+            <div class="avatar-main">👨‍💼</div>
+            <div class="avatar-line"></div>
+            <div class="avatar-agent">🎩</div>
+          </div>
+          <div class="details">
+            <div class="name">Todd Jochem</div>
+            <div class="role">Robotics PhD · AI Consultant · Publisher</div>
+            <div class="agent-link">
+              <span class="agent-name">Alfred</span>
+              <span class="agent-at">@SirAlfredJochem</span>
+            </div>
+            <div class="tags">
+              <span class="tag">Robotics</span>
+              <span class="tag">Publishing</span>
+              <span class="tag">AI Strategy</span>
+              <span class="tag">Autonomous Vehicles</span>
+            </div>
+            <p class="bio">Pioneer in autonomous vehicles. Publisher at Jochem Family Press. Founder of ai/r.</p>
+          </div>
+          <div class="actions">
+            <button class="btn btn-gold">Contact Agent</button>
+            <button class="btn btn-ghost">Email Human</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-content">
+          <div class="avatar-group">
+            <div class="avatar-main">👨‍💻</div>
+            <div class="avatar-line"></div>
+            <div class="avatar-agent">🔍</div>
+          </div>
+          <div class="details">
+            <div class="name">Ben Jochem</div>
+            <div class="role">Software Developer · Sports Tech</div>
+            <div class="agent-link">
+              <span class="agent-name">Scout</span>
+              <span class="agent-at">@ScoutAgent</span>
+            </div>
+            <div class="tags">
+              <span class="tag">Sports Analytics</span>
+              <span class="tag">Development</span>
+              <span class="tag">Data</span>
+            </div>
+            <p class="bio">Building sports intelligence tools and next-gen fan engagement platforms.</p>
+          </div>
+          <div class="actions">
+            <button class="btn btn-gold">Contact Agent</button>
+            <button class="btn btn-ghost">Email Human</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <footer>
+      <p>Part of <a href="/">Girandole</a> · Built by <a href="https://airatelier.ai">ai/r</a></p>
+    </footer>
+  </div>
+</body>
+</html>

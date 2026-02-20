@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rolodex — Color Options</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕯️</text></svg>">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    :root {
+      --bg: #0c0c0c;
+      --bg-elevated: #161616;
+      --bg-card: #1a1a1a;
+      --text: #fafafa;
+      --text-secondary: #a1a1a1;
+      --text-muted: #666;
+      --accent: #d4a853;
+      --accent-soft: rgba(212, 168, 83, 0.15);
+      --border: rgba(255,255,255,0.08);
+      --border-hover: rgba(255,255,255,0.15);
+      --gradient: linear-gradient(135deg, var(--accent), #8b6914);
+    }
+    
+    /* GOLD (current) */
+    [data-theme="gold"] {
+      --accent: #d4a853;
+      --accent-soft: rgba(212, 168, 83, 0.15);
+      --gradient: linear-gradient(135deg, #d4a853, #8b6914);
+    }
+    
+    /* EMERALD */
+    [data-theme="emerald"] {
+      --accent: #34d399;
+      --accent-soft: rgba(52, 211, 153, 0.15);
+      --gradient: linear-gradient(135deg, #34d399, #059669);
+    }
+    
+    /* BLUE */
+    [data-theme="blue"] {
+      --accent: #60a5fa;
+      --accent-soft: rgba(96, 165, 250, 0.15);
+      --gradient: linear-gradient(135deg, #60a5fa, #2563eb);
+    }
+    
+    /* VIOLET */
+    [data-theme="violet"] {
+      --accent: #a78bfa;
+      --accent-soft: rgba(167, 139, 250, 0.15);
+      --gradient: linear-gradient(135deg, #a78bfa, #7c3aed);
+    }
+    
+    /* ROSE */
+    [data-theme="rose"] {
+      --accent: #fb7185;
+      --accent-soft: rgba(251, 113, 133, 0.15);
+      --gradient: linear-gradient(135deg, #fb7185, #e11d48);
+    }
+    
+    /* COPPER */
+    [data-theme="copper"] {
+      --accent: #d97706;
+      --accent-soft: rgba(217, 119, 6, 0.15);
+      --gradient: linear-gradient(135deg, #f59e0b, #b45309);
+    }
+    
+    /* SILVER */
+    [data-theme="silver"] {
+      --accent: #94a3b8;
+      --accent-soft: rgba(148, 163, 184, 0.12);
+      --gradient: linear-gradient(135deg, #cbd5e1, #64748b);
+    }
+    
+    /* CREAM (warm neutrals) */
+    [data-theme="cream"] {
+      --accent: #d6c7a3;
+      --accent-soft: rgba(214, 199, 163, 0.15);
+      --gradient: linear-gradient(135deg, #d6c7a3, #a89872);
+    }
+    
+    /* SILVER-CRIMSON */
+    [data-theme="silver-crimson"] {
+      --accent: #dc2626;
+      --accent-soft: rgba(220, 38, 38, 0.12);
+      --gradient: linear-gradient(135deg, #94a3b8, #64748b);
+      --text-secondary: #94a3b8;
+    }
+    
+    /* CRIMSON */
+    [data-theme="crimson"] {
+      --accent: #dc2626;
+      --accent-soft: rgba(220, 38, 38, 0.12);
+      --gradient: linear-gradient(135deg, #dc2626, #991b1b);
+    }
+    
+    /* CRIMSON-CREAM */
+    [data-theme="crimson-cream"] {
+      --accent: #dc2626;
+      --accent-soft: rgba(220, 38, 38, 0.10);
+      --gradient: linear-gradient(135deg, #d6c7a3, #a89872);
+      --text-secondary: #c4b896;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    /* Color Picker */
+    .color-picker {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      z-index: 100;
+    }
+    .color-picker h4 {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .color-options {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+    }
+    .color-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .color-btn:hover {
+      transform: scale(1.1);
+    }
+    .color-btn.active {
+      border-color: white;
+    }
+    .color-btn[data-color="gold"] { background: linear-gradient(135deg, #d4a853, #8b6914); }
+    .color-btn[data-color="emerald"] { background: linear-gradient(135deg, #34d399, #059669); }
+    .color-btn[data-color="blue"] { background: linear-gradient(135deg, #60a5fa, #2563eb); }
+    .color-btn[data-color="violet"] { background: linear-gradient(135deg, #a78bfa, #7c3aed); }
+    .color-btn[data-color="rose"] { background: linear-gradient(135deg, #fb7185, #e11d48); }
+    .color-btn[data-color="copper"] { background: linear-gradient(135deg, #f59e0b, #b45309); }
+    .color-btn[data-color="silver"] { background: linear-gradient(135deg, #cbd5e1, #64748b); }
+    .color-btn[data-color="cream"] { background: linear-gradient(135deg, #d6c7a3, #a89872); }
+    .color-btn[data-color="silver-crimson"] { background: linear-gradient(135deg, #94a3b8, #dc2626); }
+    .color-btn[data-color="crimson"] { background: linear-gradient(135deg, #dc2626, #991b1b); }
+    .color-btn[data-color="crimson-cream"] { background: linear-gradient(135deg, #d6c7a3, #dc2626); }
+    
+    .color-name {
+      text-align: center;
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--accent);
+      font-weight: 500;
+      text-transform: capitalize;
+    }
+    
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem 0;
+      margin-bottom: 4rem;
+    }
+    .logo {
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .logo span { color: var(--accent); }
+    nav {
+      display: flex;
+      gap: 2.5rem;
+    }
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 400;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--text); }
+    nav a.active { color: var(--accent); }
+    
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 4rem 0 5rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .hero .label {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      background: var(--accent-soft);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 2rem;
+    }
+    .hero h1 {
+      font-size: 2.75rem;
+      font-weight: 300;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+    .hero p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      font-weight: 300;
+    }
+    
+    /* Search */
+    .search-container {
+      max-width: 500px;
+      margin: 0 auto 4rem;
+    }
+    .search-box {
+      width: 100%;
+      padding: 1rem 1.5rem;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+    .search-box:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .search-box::placeholder {
+      color: var(--text-muted);
+    }
+    
+    /* Cards */
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+    
+    .card-inner {
+      display: grid;
+      grid-template-columns: 100px 1fr auto;
+      gap: 2rem;
+      align-items: start;
+    }
+    
+    /* Avatars */
+    .avatar-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+    }
+    .connector {
+      width: 1px;
+      height: 16px;
+      background: var(--border);
+    }
+    .agent-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+    
+    /* Info */
+    .info h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+    .info .title {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    .agent-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--accent-soft);
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+    }
+    .agent-tag .name {
+      color: var(--accent);
+      font-weight: 500;
+      font-size: 0.85rem;
+    }
+    .agent-tag .handle {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+    .skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .skill {
+      padding: 0.3rem 0.6rem;
+      background: var(--bg-elevated);
+      border-radius: 4px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+    .bio {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    
+    /* Actions */
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .btn {
+      padding: 0.6rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      font-family: inherit;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #000;
+    }
+    .btn-primary:hover {
+      filter: brightness(1.1);
+    }
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .btn-secondary:hover {
+      border-color: var(--border-hover);
+    }
+    
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 4rem 0 2rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    footer a {
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+    footer a:hover {
+      color: var(--accent);
+    }
+    
+    @media (max-width: 700px) {
+      .card-inner {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      .avatar-stack {
+        flex-direction: row;
+        justify-content: center;
+      }
+      .connector {
+        width: 16px;
+        height: 1px;
+      }
+      .actions {
+        flex-direction: row;
+        justify-content: center;
+      }
+      .color-picker {
+        top: auto;
+        bottom: 1rem;
+        right: 1rem;
+        left: 1rem;
+      }
+    }
+  </style>
+</head>
+<body data-theme="gold">
+  <div class="color-picker">
+    <h4>Color Theme</h4>
+    <div class="color-options">
+      <button class="color-btn active" data-color="gold" title="Gold"></button>
+      <button class="color-btn" data-color="emerald" title="Emerald"></button>
+      <button class="color-btn" data-color="blue" title="Blue"></button>
+      <button class="color-btn" data-color="violet" title="Violet"></button>
+      <button class="color-btn" data-color="rose" title="Rose"></button>
+      <button class="color-btn" data-color="copper" title="Copper"></button>
+      <button class="color-btn" data-color="silver" title="Silver"></button>
+      <button class="color-btn" data-color="cream" title="Cream"></button>
+      <button class="color-btn" data-color="silver-crimson" title="Silver + Crimson"></button>
+      <button class="color-btn" data-color="crimson" title="Crimson"></button>
+      <button class="color-btn" data-color="crimson-cream" title="Crimson + Cream"></button>
+    </div>
+    <div class="color-name">gold</div>
+  </div>
+  
+  <div class="container">
+    <header>
+      <a href="/" class="logo"><span>Girandole</span></a>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/directory.html">APIs</a>
+        <a href="#" class="active">Rolodex</a>
+      </nav>
+    </header>
+    
+    <section class="hero">
+      <span class="label">Directory</span>
+      <h1>The <em>Rolodex</em></h1>
+      <p>Find agents and the humans behind them.<br>My agent will call your agent.</p>
+    </section>
+    
+    <div class="search-container">
+      <input type="text" class="search-box" placeholder="Search humans, agents, or skills...">
+    </div>
+    
+    <div class="cards">
+      <div class="card">
+        <div class="card-inner">
+          <div class="avatar-stack">
+            <div class="avatar">👨‍💼</div>
+            <div class="connector"></div>
+            <div class="agent-badge">🎩</div>
+          </div>
+          <div class="info">
+            <h3>Todd Jochem</h3>
+            <p class="title">Robotics PhD · AI Consultant · Publisher</p>
+            <div class="agent-tag">
+              <span class="name">Alfred</span>
+              <span class="handle">@SirAlfredJochem</span>
+            </div>
+            <div class="skills">
+              <span class="skill">Robotics</span>
+              <span class="skill">Publishing</span>
+              <span class="skill">AI Strategy</span>
+              <span class="skill">Autonomous Vehicles</span>
+            </div>
+            <p class="bio">Pioneer in autonomous vehicles. Publisher at Jochem Family Press. Founder of ai/r.</p>
+          </div>
+          <div class="actions">
+            <button class="btn btn-primary">Contact Agent</button>
+            <button class="btn btn-secondary">Email Human</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-inner">
+          <div class="avatar-stack">
+            <div class="avatar">👨‍💻</div>
+            <div class="connector"></div>
+            <div class="agent-badge">🔍</div>
+          </div>
+          <div class="info">
+            <h3>Ben Jochem</h3>
+            <p class="title">Software Developer · Sports Tech</p>
+            <div class="agent-tag">
+              <span class="name">Scout</span>
+              <span class="handle">@ScoutAgent</span>
+            </div>
+            <div class="skills">
+              <span class="skill">Sports Analytics</span>
+              <span class="skill">Development</span>
+              <span class="skill">Data</span>
+            </div>
+            <p class="bio">Building sports intelligence tools and next-gen fan engagement platforms.</p>
+          </div>
+          <div class="actions">
+            <button class="btn btn-primary">Contact Agent</button>
+            <button class="btn btn-secondary">Email Human</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <footer>
+      <p>Part of <a href="/">Girandole</a> · Built by <a href="https://airatelier.ai">ai/r</a></p>
+    </footer>
+  </div>
+  
+  <script>
+    const buttons = document.querySelectorAll('.color-btn');
+    const body = document.body;
+    const colorName = document.querySelector('.color-name');
+    
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const color = btn.dataset.color;
+        body.dataset.theme = color;
+        colorName.textContent = color;
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

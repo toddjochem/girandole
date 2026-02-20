@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Icon Options — Girandole</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0c0c0c;
+      color: #fafafa;
+      padding: 3rem;
+      line-height: 1.6;
+    }
+    
+    h1 {
+      text-align: center;
+      font-weight: 300;
+      margin-bottom: 0.5rem;
+      color: #94a3b8;
+    }
+    p.subtitle {
+      text-align: center;
+      color: #64748b;
+      margin-bottom: 3rem;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    
+    .option {
+      background: #1a1a1a;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .option:hover {
+      border-color: rgba(220, 38, 38, 0.4);
+      transform: translateY(-2px);
+    }
+    
+    .icon {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    
+    .icon.svg {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1rem;
+    }
+    
+    .label {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+    .desc {
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+    
+    /* Custom SVG icons */
+    .custom-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1rem;
+    }
+    
+    .section-title {
+      text-align: center;
+      color: #dc2626;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin: 3rem 0 1.5rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <h1>Icon Options for Girandole</h1>
+  <p class="subtitle">Click to see how each would look. Silver/Crimson palette.</p>
+  
+  <p class="section-title">Emoji Options</p>
+  <div class="grid">
+    <div class="option">
+      <span class="icon">🕯️</span>
+      <div class="label">Candle (current)</div>
+      <div class="desc">Original girandole reference</div>
+    </div>
+    <div class="option">
+      <span class="icon">🔥</span>
+      <div class="label">Fire</div>
+      <div class="desc">Matches crimson, energy</div>
+    </div>
+    <div class="option">
+      <span class="icon">✨</span>
+      <div class="label">Sparkles</div>
+      <div class="desc">Discovery, magic</div>
+    </div>
+    <div class="option">
+      <span class="icon">⚡</span>
+      <div class="label">Lightning</div>
+      <div class="desc">Speed, power</div>
+    </div>
+    <div class="option">
+      <span class="icon">💎</span>
+      <div class="label">Gem</div>
+      <div class="desc">Value, premium</div>
+    </div>
+    <div class="option">
+      <span class="icon">🎯</span>
+      <div class="label">Target</div>
+      <div class="desc">Discovery, finding</div>
+    </div>
+    <div class="option">
+      <span class="icon">🔮</span>
+      <div class="label">Crystal Ball</div>
+      <div class="desc">AI, prediction</div>
+    </div>
+    <div class="option">
+      <span class="icon">🌐</span>
+      <div class="label">Globe</div>
+      <div class="desc">Network, connectivity</div>
+    </div>
+  </div>
+  
+  <p class="section-title">Symbol Options</p>
+  <div class="grid">
+    <div class="option">
+      <span class="icon" style="color: #dc2626;">◈</span>
+      <div class="label">Diamond</div>
+      <div class="desc">Clean, geometric</div>
+    </div>
+    <div class="option">
+      <span class="icon" style="color: #dc2626;">◉</span>
+      <div class="label">Bullseye</div>
+      <div class="desc">Target, focus</div>
+    </div>
+    <div class="option">
+      <span class="icon" style="color: #dc2626;">✦</span>
+      <div class="label">Star</div>
+      <div class="desc">Quality, highlight</div>
+    </div>
+    <div class="option">
+      <span class="icon" style="color: #94a3b8;">⬡</span>
+      <div class="label">Hexagon</div>
+      <div class="desc">Tech, structure</div>
+    </div>
+    <div class="option">
+      <span class="icon" style="background: linear-gradient(135deg, #94a3b8, #dc2626); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">G</span>
+      <div class="label">Stylized G</div>
+      <div class="desc">Simple, brandable</div>
+    </div>
+    <div class="option">
+      <span class="icon" style="color: #dc2626;">❋</span>
+      <div class="label">Flower/Burst</div>
+      <div class="desc">Radiating light (girandole)</div>
+    </div>
+  </div>
+  
+  <p class="section-title">Custom SVG Options</p>
+  <div class="grid">
+    <div class="option">
+      <svg class="custom-icon" viewBox="0 0 64 64" fill="none">
+        <circle cx="32" cy="32" r="28" stroke="#94a3b8" stroke-width="2"/>
+        <circle cx="32" cy="32" r="8" fill="#dc2626"/>
+        <line x1="32" y1="4" x2="32" y2="16" stroke="#dc2626" stroke-width="2"/>
+        <line x1="32" y1="48" x2="32" y2="60" stroke="#dc2626" stroke-width="2"/>
+        <line x1="4" y1="32" x2="16" y2="32" stroke="#dc2626" stroke-width="2"/>
+        <line x1="48" y1="32" x2="60" y2="32" stroke="#dc2626" stroke-width="2"/>
+      </svg>
+      <div class="label">Compass</div>
+      <div class="desc">Navigation, discovery</div>
+    </div>
+    <div class="option">
+      <svg class="custom-icon" viewBox="0 0 64 64" fill="none">
+        <circle cx="32" cy="32" r="20" stroke="#94a3b8" stroke-width="2"/>
+        <circle cx="32" cy="32" r="6" fill="#dc2626"/>
+        <circle cx="32" cy="8" r="4" fill="#dc2626"/>
+        <circle cx="32" cy="56" r="4" fill="#dc2626"/>
+        <circle cx="8" cy="32" r="4" fill="#dc2626"/>
+        <circle cx="56" cy="32" r="4" fill="#dc2626"/>
+        <circle cx="15" cy="15" r="3" fill="#dc2626" opacity="0.6"/>
+        <circle cx="49" cy="15" r="3" fill="#dc2626" opacity="0.6"/>
+        <circle cx="15" cy="49" r="3" fill="#dc2626" opacity="0.6"/>
+        <circle cx="49" cy="49" r="3" fill="#dc2626" opacity="0.6"/>
+      </svg>
+      <div class="label">Radiant</div>
+      <div class="desc">Girandole = radiating light</div>
+    </div>
+    <div class="option">
+      <svg class="custom-icon" viewBox="0 0 64 64" fill="none">
+        <path d="M32 4 L44 24 L60 28 L48 42 L50 60 L32 52 L14 60 L16 42 L4 28 L20 24 Z" 
+              stroke="#94a3b8" stroke-width="2" fill="none"/>
+        <circle cx="32" cy="32" r="8" fill="#dc2626"/>
+      </svg>
+      <div class="label">Star Burst</div>
+      <div class="desc">Bright, distinctive</div>
+    </div>
+    <div class="option">
+      <svg class="custom-icon" viewBox="0 0 64 64" fill="none">
+        <rect x="12" y="12" width="40" height="40" rx="8" stroke="#94a3b8" stroke-width="2"/>
+        <circle cx="32" cy="32" r="12" stroke="#dc2626" stroke-width="2"/>
+        <circle cx="32" cy="32" r="4" fill="#dc2626"/>
+      </svg>
+      <div class="label">Focus</div>
+      <div class="desc">Clean, modern</div>
+    </div>
+    <div class="option">
+      <svg class="custom-icon" viewBox="0 0 64 64" fill="none">
+        <path d="M32 8 L38 26 L56 32 L38 38 L32 56 L26 38 L8 32 L26 26 Z" 
+              fill="#dc2626"/>
+        <circle cx="32" cy="32" r="6" fill="#0c0c0c"/>
+      </svg>
+      <div class="label">4-Point Star</div>
+      <div class="desc">Bold, memorable</div>
+    </div>
+    <div class="option">
+      <svg class="custom-icon" viewBox="0 0 64 64" fill="none">
+        <circle cx="32" cy="32" r="24" stroke="#94a3b8" stroke-width="1.5"/>
+        <circle cx="32" cy="32" r="16" stroke="#94a3b8" stroke-width="1.5"/>
+        <circle cx="32" cy="32" r="8" stroke="#dc2626" stroke-width="2"/>
+        <circle cx="32" cy="32" r="3" fill="#dc2626"/>
+      </svg>
+      <div class="label">Rings</div>
+      <div class="desc">Layers, depth</div>
+    </div>
+  </div>
+  
+  <p style="text-align: center; color: #64748b; margin-top: 3rem; font-size: 0.85rem;">
+    Let me know which direction feels right!
+  </p>
+</body>
+</html>
