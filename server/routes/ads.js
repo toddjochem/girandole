@@ -313,7 +313,7 @@ export default function adsRoutes(db) {
       
       // Find matching campaigns
       const campaigns = await db.query(`
-        SELECT c.*, l.name, l.slug, l.short_description, l.badges, l.avg_rating
+        SELECT c.*, l.name, l.slug, l.short_description, l.badges, l.avg_rating, l.is_sample
         FROM ad_campaigns c
         JOIN listings l ON c.listing_id = l.id
         WHERE c.status = 'active'
@@ -355,7 +355,8 @@ export default function adsRoutes(db) {
           badges: c.badges,
           avg_rating: c.avg_rating,
           destination_url: c.destination_url || `/listing/${c.slug}`,
-          position: i + 1
+          position: i + 1,
+          is_sample: c.is_sample
         });
       }
       

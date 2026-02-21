@@ -153,9 +153,6 @@
       background: var(--sponsored-bg);
       border-color: var(--sponsored-border);
     }
-    .listing-card.sample {
-      opacity: 0.75;
-    }
     .badge.sample {
       background: #374151;
       color: #9ca3af;
@@ -451,6 +448,7 @@
     }
     
     function renderSponsored(ad) {
+      const sampleBadge = ad.is_sample ? '<span class="badge sample">📋 SAMPLE</span>' : '';
       return `
         <div class="listing-card sponsored" onclick="trackAdClick('${ad.campaign_id}', '${ad.listing_slug}')">
           <div class="listing-header">
@@ -463,7 +461,7 @@
           <p class="listing-desc">${escapeHtml(ad.description || '')}</p>
           <div class="listing-meta">
             <div class="listing-badges">
-              ${(ad.badges || []).map(b => `<span class="badge">${badgeIcon(b)} ${b}</span>`).join('')}
+              ${sampleBadge}${(ad.badges || []).map(b => `<span class="badge">${badgeIcon(b)} ${b}</span>`).join('')}
             </div>
             ${ad.avg_rating ? `<span class="listing-rating">★ ${parseFloat(ad.avg_rating).toFixed(1)}</span>` : ''}
             <button class="copy-endpoint-btn" onclick="event.stopPropagation(); copyEndpoint('${ad.destination_url || '/listing/' + ad.listing_slug}', '${ad.campaign_id}')">📋 Copy Endpoint</button>
