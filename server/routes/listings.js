@@ -31,6 +31,7 @@ export default function listingsRoutes(db) {
           l.category, l.tags, l.pricing_model, l.price_amount, l.price_currency,
           l.status, l.badges, l.avg_rating, l.review_count,
           l.uptime_percent, l.avg_response_ms, l.created_at,
+          l.query_count, l.unique_agents_7d,
           COALESCE(a.trust_score, 50) as owner_trust_score
         FROM listings l
         LEFT JOIN agents a ON l.owner_agent_id = a.id
@@ -181,6 +182,21 @@ export default function listingsRoutes(db) {
         ORDER BY checked_at DESC
         LIMIT 24
       `, [result.rows[0].id]);
+      
+      // Log usage (for "verified usage" trust metric)
+      const ipHash = req.ip ? require('crypto').createHash('sha256').update(req.ip).digest('hex').slice(0, 16) : null;
+      db.query(`
+        INSERT INTO listing_queries (listing_id, agent_id, ip_hash)
+        VALUES ($1, $2, $3)
+      `, [result.rows[0].id, req.agent?.id || null, ipHash]).catch(() => {});
+      
+      // Update query count (fire and forget)
+      db.query(`
+        UPDATE listings SET 
+          query_count = query_count + 1,
+          last_queried_at = NOW()
+        WHERE id = $1
+      `, [result.rows[0].id]).catch(() => {});
       
       res.json({
         listing: result.rows[0],
