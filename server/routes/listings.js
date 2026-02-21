@@ -30,8 +30,10 @@ export default function listingsRoutes(db) {
           l.id, l.type, l.name, l.slug, l.short_description, l.description,
           l.category, l.tags, l.pricing_model, l.price_amount, l.price_currency,
           l.status, l.badges, l.avg_rating, l.review_count,
-          l.uptime_percent, l.avg_response_ms, l.created_at
+          l.uptime_percent, l.avg_response_ms, l.created_at,
+          COALESCE(a.trust_score, 50) as owner_trust_score
         FROM listings l
+        LEFT JOIN agents a ON l.owner_agent_id = a.id
         WHERE l.status = 'active'
       `;
       const params = [];
@@ -70,28 +72,33 @@ export default function listingsRoutes(db) {
         params.push(badge);
       }
       
-      // Sorting
+      // Sorting - trust score factors into all rankings
       switch (sort) {
         case 'rating':
-          query += ` ORDER BY l.avg_rating DESC NULLS LAST, l.review_count DESC`;
+          query += ` ORDER BY l.avg_rating DESC NULLS LAST, COALESCE(a.trust_score, 50) DESC, l.review_count DESC`;
           break;
         case 'newest':
           query += ` ORDER BY l.created_at DESC`;
           break;
         case 'popular':
-          query += ` ORDER BY l.review_count DESC, l.avg_rating DESC NULLS LAST`;
+          query += ` ORDER BY l.review_count DESC, COALESCE(a.trust_score, 50) DESC, l.avg_rating DESC NULLS LAST`;
+          break;
+        case 'trust':
+          query += ` ORDER BY COALESCE(a.trust_score, 50) DESC, l.avg_rating DESC NULLS LAST`;
           break;
         case 'relevance':
         default:
           if (q) {
-            // Prioritize name matches, then description
+            // Prioritize: name match, then trust score, then rating
             paramIdx++;
             query += ` ORDER BY 
               CASE WHEN l.name ILIKE $${paramIdx} THEN 0 ELSE 1 END,
+              COALESCE(a.trust_score, 50) DESC,
               l.avg_rating DESC NULLS LAST, l.review_count DESC`;
             params.push(`%${q}%`);
           } else {
-            query += ` ORDER BY l.avg_rating DESC NULLS LAST, l.review_count DESC`;
+            // Default: trust score then rating
+            query += ` ORDER BY COALESCE(a.trust_score, 50) DESC, l.avg_rating DESC NULLS LAST, l.review_count DESC`;
           }
       }
       
