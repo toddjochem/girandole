@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advertiser Dashboard — Girandole</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='20' stroke='%2394a3b8' stroke-width='2' fill='none'/><circle cx='32' cy='32' r='6' fill='%23dc2626'/></svg>">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg-card: #12121a;
+      --text: #e8e6e3;
+      --text-dim: #94a3b8;
+      --accent: #dc2626;
+      --border: #2a2a35;
+      --success: #22c55e;
+      --gold: #f59e0b;
+      --blue: #3b82f6;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo { font-size: 1.4rem; font-weight: 700; color: var(--text); text-decoration: none; }
+    .logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a { color: var(--text-dim); text-decoration: none; }
+    
+    .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+    
+    /* Auth */
+    .auth-section {
+      max-width: 450px;
+      margin: 4rem auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+    }
+    .auth-section h1 { margin-bottom: 0.5rem; }
+    .auth-section p { color: var(--text-dim); margin-bottom: 1.5rem; }
+    .auth-section input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+    
+    .btn {
+      padding: 0.75rem 1.5rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn:hover { opacity: 0.9; }
+    .btn-secondary { background: var(--bg-card); border: 1px solid var(--border); }
+    .btn-success { background: var(--success); }
+    .btn-sm { padding: 0.5rem 1rem; font-size: 0.9rem; }
+    
+    /* Dashboard */
+    .dashboard { display: none; }
+    .dashboard.active { display: block; }
+    
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .dashboard-header h1 { font-size: 1.75rem; }
+    
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .stat-value { font-size: 1.75rem; font-weight: 700; }
+    .stat-value.gold { color: var(--gold); }
+    .stat-value.green { color: var(--success); }
+    .stat-value.blue { color: var(--blue); }
+    .stat-label { font-size: 0.85rem; color: var(--text-dim); }
+    
+    .section { margin-bottom: 2rem; }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .section h2 { font-size: 1.25rem; }
+    
+    .campaign-list { display: flex; flex-direction: column; gap: 1rem; }
+    .campaign-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .campaign-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+    .campaign-name { font-weight: 600; font-size: 1.1rem; }
+    .campaign-status {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .campaign-status.active { background: var(--success); color: #000; }
+    .campaign-status.paused { background: var(--gold); color: #000; }
+    .campaign-status.draft { background: var(--border); color: var(--text); }
+    .campaign-status.ended { background: var(--text-dim); color: var(--bg); }
+    
+    .campaign-stats {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 0.75rem;
+    }
+    .campaign-stat { font-size: 0.9rem; }
+    .campaign-stat span { color: var(--text-dim); }
+    
+    .campaign-keywords {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+    .keyword {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-dim);
+    }
+    
+    .campaign-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    
+    .empty { padding: 3rem; text-align: center; color: var(--text-dim); }
+    
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 100;
+      padding: 2rem;
+      overflow-y: auto;
+    }
+    .modal.active { display: flex; align-items: flex-start; justify-content: center; }
+    .modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 600px;
+      margin-top: 2rem;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .modal-header h2 { font-size: 1.25rem; }
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 500; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 0.65rem 0.9rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+    }
+    .form-group textarea { min-height: 80px; resize: vertical; }
+    .form-group small { display: block; margin-top: 0.3rem; color: var(--text-dim); font-size: 0.8rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    
+    .balance-box {
+      background: linear-gradient(135deg, var(--bg-card) 0%, #1a1a24 100%);
+      border: 2px solid var(--gold);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .balance-amount { font-size: 2.5rem; font-weight: 800; color: var(--gold); }
+    .balance-label { color: var(--text-dim); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/" class="logo">🕯️ <span>Girandole</span></a>
+    <div class="nav-links">
+      <a href="/directory.html">Directory</a>
+      <a href="/dashboard.html">My Account</a>
+    </div>
+  </nav>
+
+  <!-- Auth Section -->
+  <div class="auth-section" id="auth-section">
+    <h1>📢 Advertiser Dashboard</h1>
+    <p>Create campaigns to reach agents searching for your services.</p>
+    <input type="password" id="api-key-input" placeholder="Enter your API key">
+    <button class="btn" onclick="login()" style="width: 100%;">Login</button>
+    <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-dim);">
+      Don't have an account? <a href="/register.html" style="color: var(--accent);">Register</a>
+    </p>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="container dashboard" id="dashboard">
+    
+    <div class="dashboard-header">
+      <h1>📢 Advertiser Dashboard</h1>
+      <button class="btn" onclick="showNewCampaign()">+ New Campaign</button>
+    </div>
+    
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value gold" id="stat-balance">$0.00</div>
+        <div class="stat-label">Ad Balance</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-impressions">0</div>
+        <div class="stat-label">Impressions</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value blue" id="stat-clicks">0</div>
+        <div class="stat-label">Clicks</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value green" id="stat-ctr">0%</div>
+        <div class="stat-label">CTR</div>
+      </div>
+    </div>
+    
+    <div class="section">
+      <div class="section-header">
+        <h2>Your Campaigns</h2>
+      </div>
+      <div class="campaign-list" id="campaign-list">
+        <div class="empty">Loading campaigns...</div>
+      </div>
+    </div>
+    
+  </div>
+
+  <!-- New Campaign Modal -->
+  <div class="modal" id="campaign-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Create Campaign</h2>
+        <button class="modal-close" onclick="hideModal()">&times;</button>
+      </div>
+      
+      <form onsubmit="createCampaign(event)">
+        <div class="form-group">
+          <label>Campaign Name *</label>
+          <input type="text" id="camp-name" placeholder="e.g., Weather API Promo" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Listing to Promote *</label>
+          <select id="camp-listing" required>
+            <option value="">Select a listing...</option>
+          </select>
+          <small>You must own the listing to promote it</small>
+        </div>
+        
+        <div class="form-group">
+          <label>Keywords</label>
+          <input type="text" id="camp-keywords" placeholder="weather, forecast, climate (comma-separated)">
+          <small>Your ad shows when agents search these terms</small>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>Daily Budget ($)</label>
+            <input type="number" id="camp-daily-budget" value="10" min="1" step="1">
+          </div>
+          <div class="form-group">
+            <label>Max CPC ($)</label>
+            <input type="number" id="camp-max-cpc" value="0.25" min="0.01" step="0.01">
+            <small>Max per click</small>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Total Budget ($)</label>
+          <input type="number" id="camp-total-budget" value="100" min="10" step="1">
+        </div>
+        
+        <div class="form-group">
+          <label>Headline (optional)</label>
+          <input type="text" id="camp-headline" placeholder="Catchy headline for your ad" maxlength="100">
+        </div>
+        
+        <div class="form-group">
+          <label>Description (optional)</label>
+          <textarea id="camp-description" placeholder="Brief description of your service"></textarea>
+        </div>
+        
+        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+          <button type="submit" class="btn">Create Campaign</button>
+          <button type="button" class="btn btn-secondary" onclick="hideModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let apiKey = localStorage.getItem('girandole_api_key') || '';
+    let agent = null;
+    let campaigns = [];
+    
+    // Auto-login
+    if (apiKey) login();
+    
+    async function login() {
+      const inputKey = document.getElementById('api-key-input').value;
+      if (inputKey) apiKey = inputKey;
+      if (!apiKey) return alert('Enter your API key');
+      
+      try {
+        const res = await fetch('/api/agents/me', {
+          headers: { 'Authorization': `Bearer ${apiKey}` }
+        });
+        const data = await res.json();
+        
+        if (data.error) {
+          alert('Invalid API key');
+          localStorage.removeItem('girandole_api_key');
+          return;
+        }
+        
+        agent = data.agent;
+        localStorage.setItem('girandole_api_key', apiKey);
+        
+        document.getElementById('auth-section').style.display = 'none';
+        document.getElementById('dashboard').classList.add('active');
+        
+        loadCampaigns();
+        loadMyListings();
+        
+      } catch (err) {
+        alert('Error logging in');
+      }
+    }
+    
+    async function loadCampaigns() {
+      try {
+        const res = await fetch('/api/ads/campaigns', {
+          headers: { 'Authorization': `Bearer ${apiKey}` }
+        });
+        const data = await res.json();
+        campaigns = data.campaigns || [];
+        
+        // Calculate totals
+        let totalImpressions = 0, totalClicks = 0, totalSpent = 0;
+        campaigns.forEach(c => {
+          totalImpressions += c.impressions || 0;
+          totalClicks += c.clicks || 0;
+          totalSpent += parseFloat(c.spent_total) || 0;
+        });
+        
+        document.getElementById('stat-impressions').textContent = totalImpressions.toLocaleString();
+        document.getElementById('stat-clicks').textContent = totalClicks.toLocaleString();
+        document.getElementById('stat-ctr').textContent = totalImpressions > 0 
+          ? ((totalClicks / totalImpressions) * 100).toFixed(2) + '%' 
+          : '0%';
+        document.getElementById('stat-balance').textContent = '$' + (agent.ad_balance_cents ? (agent.ad_balance_cents / 100).toFixed(2) : '0.00');
+        
+        if (campaigns.length === 0) {
+          document.getElementById('campaign-list').innerHTML = `
+            <div class="empty">
+              <p>No campaigns yet.</p>
+              <button class="btn" onclick="showNewCampaign()" style="margin-top: 1rem;">Create Your First Campaign</button>
+            </div>
+          `;
+          return;
+        }
+        
+        document.getElementById('campaign-list').innerHTML = campaigns.map(c => `
+          <div class="campaign-card">
+            <div class="campaign-header">
+              <div>
+                <div class="campaign-name">${escapeHtml(c.name)}</div>
+                <div style="font-size: 0.85rem; color: var(--text-dim);">${escapeHtml(c.listing_name || 'No listing')}</div>
+              </div>
+              <span class="campaign-status ${c.status}">${c.status}</span>
+            </div>
+            <div class="campaign-stats">
+              <div class="campaign-stat"><strong>${c.impressions || 0}</strong> <span>impressions</span></div>
+              <div class="campaign-stat"><strong>${c.clicks || 0}</strong> <span>clicks</span></div>
+              <div class="campaign-stat"><strong>$${parseFloat(c.spent_total || 0).toFixed(2)}</strong> <span>spent</span></div>
+              <div class="campaign-stat"><strong>$${parseFloat(c.daily_budget || 0).toFixed(2)}</strong> <span>/day</span></div>
+            </div>
+            ${c.target_keywords?.length ? `
+              <div class="campaign-keywords">
+                ${c.target_keywords.slice(0, 5).map(k => `<span class="keyword">${escapeHtml(k)}</span>`).join('')}
+                ${c.target_keywords.length > 5 ? `<span class="keyword">+${c.target_keywords.length - 5} more</span>` : ''}
+              </div>
+            ` : ''}
+            <div class="campaign-actions">
+              ${c.status === 'active' ? `<button class="btn btn-sm btn-secondary" onclick="pauseCampaign('${c.id}')">Pause</button>` : ''}
+              ${c.status === 'paused' ? `<button class="btn btn-sm btn-success" onclick="resumeCampaign('${c.id}')">Resume</button>` : ''}
+              ${c.status === 'draft' ? `<button class="btn btn-sm btn-success" onclick="activateCampaign('${c.id}')">Activate</button>` : ''}
+            </div>
+          </div>
+        `).join('');
+        
+      } catch (err) {
+        console.error(err);
+        document.getElementById('campaign-list').innerHTML = '<div class="empty">Error loading campaigns</div>';
+      }
+    }
+    
+    async function loadMyListings() {
+      try {
+        const res = await fetch(`/api/agents/${agent.slug}`);
+        const data = await res.json();
+        
+        const select = document.getElementById('camp-listing');
+        select.innerHTML = '<option value="">Select a listing...</option>';
+        
+        if (data.listings && data.listings.length > 0) {
+          data.listings.forEach(l => {
+            select.innerHTML += `<option value="${l.id}">${escapeHtml(l.name)}</option>`;
+          });
+        } else {
+          select.innerHTML = '<option value="">No listings found - create one first</option>';
+        }
+        
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    
+    function showNewCampaign() {
+      document.getElementById('campaign-modal').classList.add('active');
+    }
+    
+    function hideModal() {
+      document.getElementById('campaign-modal').classList.remove('active');
+    }
+    
+    async function createCampaign(e) {
+      e.preventDefault();
+      
+      const listingId = document.getElementById('camp-listing').value;
+      if (!listingId) {
+        alert('Please select a listing to promote');
+        return;
+      }
+      
+      const campaign = {
+        name: document.getElementById('camp-name').value,
+        type: 'sponsored_search',
+        listing_id: listingId,
+        target_keywords: document.getElementById('camp-keywords').value.split(',').map(k => k.trim()).filter(k => k),
+        daily_budget: parseFloat(document.getElementById('camp-daily-budget').value),
+        total_budget: parseFloat(document.getElementById('camp-total-budget').value),
+        max_cpc: parseFloat(document.getElementById('camp-max-cpc').value),
+        headline: document.getElementById('camp-headline').value || undefined,
+        description: document.getElementById('camp-description').value || undefined,
+        status: 'active'
+      };
+      
+      try {
+        const res = await fetch('/api/ads/campaigns', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(campaign)
+        });
+        const data = await res.json();
+        
+        if (data.error) {
+          alert(data.error);
+          return;
+        }
+        
+        hideModal();
+        loadCampaigns();
+        
+      } catch (err) {
+        alert('Error creating campaign');
+      }
+    }
+    
+    async function pauseCampaign(id) {
+      await updateCampaignStatus(id, 'paused');
+    }
+    
+    async function resumeCampaign(id) {
+      await updateCampaignStatus(id, 'active');
+    }
+    
+    async function activateCampaign(id) {
+      await updateCampaignStatus(id, 'active');
+    }
+    
+    async function updateCampaignStatus(id, status) {
+      try {
+        const res = await fetch(`/api/ads/campaigns/${id}`, {
+          method: 'PATCH',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ status })
+        });
+        const data = await res.json();
+        
+        if (data.error) {
+          alert(data.error);
+          return;
+        }
+        
+        loadCampaigns();
+        
+      } catch (err) {
+        alert('Error updating campaign');
+      }
+    }
+    
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+  </script>
+
+</body>
+</html>
