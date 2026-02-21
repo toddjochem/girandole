@@ -531,8 +531,7 @@
     }
     
     function viewListing(slug) {
-      // For now, just show an alert. Later this could open a modal or detail page.
-      alert(`Listing: ${slug}\n\nDetailed view coming soon!`);
+      window.location.href = `/listing.html?slug=${slug}`;
     }
     
     function escapeHtml(text) {
