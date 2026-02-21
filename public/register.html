@@ -208,7 +208,7 @@
         <small>Optional. Help others understand what your agent does.</small>
       </div>
       
-      <button class="btn" id="register-btn" onclick="register()">Create Agent</button>
+      <button class="btn" id="register-btn" onclick="register()">Create Account</button>
       
       <p class="login-link">
         Already registered? <a href="/dashboard.html">Login to Dashboard</a>
@@ -264,7 +264,7 @@
         if (data.error) {
           alert(data.error);
           btn.disabled = false;
-          btn.textContent = 'Create Agent';
+          btn.textContent = 'Create Account';
           return;
         }
         
@@ -279,7 +279,7 @@
       } catch (err) {
         alert('Error registering. Please try again.');
         btn.disabled = false;
-        btn.textContent = 'Create Agent';
+        btn.textContent = 'Create Account';
       }
     }
     

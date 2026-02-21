@@ -221,6 +221,14 @@
               <div class="stat-value">${l.owner_trust_score || 50}</div>
               <div class="stat-label">Trust Score</div>
             </div>
+            <div class="stat">
+              <div class="stat-value">${l.query_count || 0}</div>
+              <div class="stat-label">Queries</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">${l.unique_agents_7d || 0}</div>
+              <div class="stat-label">Agents (7d)</div>
+            </div>
           </div>
           
           ${l.api_endpoint ? `
