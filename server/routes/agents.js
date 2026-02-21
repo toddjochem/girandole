@@ -54,7 +54,7 @@ export default function agentsRoutes(db) {
       
     } catch (err) {
       console.error('Register error:', err);
-      res.status(500).json({ error: 'Registration failed' });
+      res.status(500).json({ error: 'Registration failed', details: err.message });
     }
   });
 
