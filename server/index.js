@@ -11,6 +11,7 @@ import listingsRoutes from './routes/listings.js';
 import reviewsRoutes from './routes/reviews.js';
 import adsRoutes from './routes/ads.js';
 import { rateLimit } from './middleware/auth.js';
+import { runHealthChecks, computeUniqueAgents } from './services/healthCheck.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -182,7 +183,41 @@ app.listen(PORT, () => {
 ║                                                       ║
 ╚═══════════════════════════════════════════════════════╝
   `);
+  
+  // Start background jobs (only if database connected)
+  if (dbConnected) {
+    startBackgroundJobs();
+  } else {
+    // Wait for DB and then start
+    const waitForDb = setInterval(() => {
+      if (dbConnected) {
+        clearInterval(waitForDb);
+        startBackgroundJobs();
+      }
+    }, 5000);
+  }
 });
+
+// Background jobs
+function startBackgroundJobs() {
+  console.log('Starting background jobs...');
+  
+  // Health checks every hour
+  setInterval(() => {
+    runHealthChecks(db).catch(err => console.error('Health check error:', err));
+  }, 60 * 60 * 1000);
+  
+  // Unique agents computation daily at midnight
+  setInterval(() => {
+    computeUniqueAgents(db).catch(err => console.error('Unique agents error:', err));
+  }, 24 * 60 * 60 * 1000);
+  
+  // Run immediately on startup
+  setTimeout(() => {
+    runHealthChecks(db).catch(err => console.error('Health check error:', err));
+    computeUniqueAgents(db).catch(err => console.error('Unique agents error:', err));
+  }, 10000); // 10 second delay to let things settle
+}
 
 // Graceful shutdown
 process.on('SIGTERM', async () => {

@@ -229,7 +229,19 @@ export default function agentsRoutes(db) {
         return res.status(404).json({ error: 'Agent not found' });
       }
       
-      res.json({ agent: result.rows[0] });
+      // Get agent's listings
+      const listings = await db.query(`
+        SELECT id, type, name, slug, short_description, avg_rating, review_count
+        FROM listings
+        WHERE owner_agent_id = $1 AND status = 'active'
+        ORDER BY avg_rating DESC NULLS LAST
+        LIMIT 20
+      `, [result.rows[0].id]);
+      
+      res.json({ 
+        agent: result.rows[0],
+        listings: listings.rows
+      });
       
     } catch (err) {
       console.error('Get agent error:', err);

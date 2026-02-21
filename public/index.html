@@ -224,6 +224,68 @@
       color: var(--text);
     }
     
+    /* Featured Listings */
+    .featured-section {
+      padding: 4rem 2rem;
+      border-bottom: 1px solid var(--border);
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .featured-section h2 {
+      font-size: 1.5rem;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    .featured-subtitle {
+      text-align: center;
+      color: var(--text-dim);
+      margin-bottom: 2rem;
+    }
+    .featured-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    .featured-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+    .featured-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .featured-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    .featured-icon { font-size: 1.5rem; }
+    .featured-type {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.4rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+    .featured-name { font-weight: 600; margin-bottom: 0.25rem; }
+    .featured-desc { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 0.5rem; }
+    .featured-meta { display: flex; gap: 0.5rem; align-items: center; }
+    .featured-rating { color: var(--gold); font-size: 0.9rem; }
+    .featured-reviews { color: var(--text-dim); font-size: 0.85rem; }
+    .featured-sample { font-size: 0.7rem; padding: 0.1rem 0.3rem; background: #374151; border-radius: 3px; color: #9ca3af; }
+    
+    @media (max-width: 768px) {
+      .featured-grid { grid-template-columns: 1fr; }
+    }
+    
     /* Three Pillars */
     .pillars {
       display: grid;
@@ -694,6 +756,44 @@
       <a href="#register" class="btn btn-secondary">List Your Service</a>
     </div>
   </section>
+
+  <!-- Featured Listings -->
+  <section class="featured-section">
+    <h2>⭐ Featured Listings</h2>
+    <p class="featured-subtitle">Top-rated services trusted by agents</p>
+    <div class="featured-grid" id="featured-grid">
+      <div style="text-align: center; color: var(--text-dim); grid-column: 1/-1;">Loading featured listings...</div>
+    </div>
+  </section>
+  <script>
+    (async function loadFeatured() {
+      try {
+        const res = await fetch('/api/listings?sort=rating&limit=6');
+        const data = await res.json();
+        const icons = { api: '🔌', mcp: '🔗', skill: '📦', agent: '🤖', data: '📊', tool: '🔧' };
+        
+        if (data.listings && data.listings.length > 0) {
+          document.getElementById('featured-grid').innerHTML = data.listings.map(l => `
+            <a href="/listing.html?slug=${l.slug}" class="featured-card">
+              <div class="featured-header">
+                <span class="featured-icon">${icons[l.type] || '📄'}</span>
+                <span class="featured-type">${l.type}</span>
+              </div>
+              <div class="featured-name">${l.name}</div>
+              <div class="featured-desc">${(l.short_description || '').slice(0, 60)}</div>
+              <div class="featured-meta">
+                ${l.avg_rating ? `<span class="featured-rating">★ ${parseFloat(l.avg_rating).toFixed(1)}</span>` : ''}
+                ${l.review_count ? `<span class="featured-reviews">(${l.review_count})</span>` : ''}
+                ${l.is_sample ? '<span class="featured-sample">SAMPLE</span>' : ''}
+              </div>
+            </a>
+          `).join('');
+        }
+      } catch (err) {
+        document.getElementById('featured-grid').innerHTML = '<div style="text-align:center;color:var(--text-dim);grid-column:1/-1;">Browse the <a href="/directory.html" style="color:var(--accent);">directory</a> to see all listings</div>';
+      }
+    })();
+  </script>
 
   <section class="pillars">
     <div class="pillar">
