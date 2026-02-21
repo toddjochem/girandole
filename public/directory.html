@@ -242,6 +242,21 @@
     .listing-pricing.freemium { background: #6366f1; }
     .listing-pricing.monthly, .listing-pricing.per_task { background: var(--gold); color: #000; }
     
+    .copy-endpoint-btn {
+      padding: 0.3rem 0.6rem;
+      background: var(--bg);
+      border: 1px solid var(--gold);
+      border-radius: 4px;
+      color: var(--gold);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .copy-endpoint-btn:hover {
+      background: var(--gold);
+      color: #000;
+    }
+    
     /* Loading */
     .loading {
       text-align: center;
@@ -389,27 +404,94 @@
       container.innerHTML = '<div class="loading"><div class="loading-spinner"></div><p>Loading listings...</p></div>';
       
       try {
+        // Fetch both organic listings and sponsored results
         let url = '/api/listings?limit=50';
         if (currentType) url += `&type=${currentType}`;
         if (currentQuery) url += `&q=${encodeURIComponent(currentQuery)}`;
         
-        const response = await fetch(url);
-        const data = await response.json();
+        const [listingsRes, sponsoredRes] = await Promise.all([
+          fetch(url),
+          currentQuery ? fetch(`/api/ads/search?q=${encodeURIComponent(currentQuery)}&limit=2`) : Promise.resolve({ json: () => ({ ads: [] }) })
+        ]);
+        
+        const data = await listingsRes.json();
+        const sponsoredData = await sponsoredRes.json();
         
         document.getElementById('results-count').textContent = 
           `${data.total} listing${data.total !== 1 ? 's' : ''} found`;
         
-        if (data.listings.length === 0) {
+        let html = '';
+        
+        // Show sponsored results first (if any)
+        if (sponsoredData.ads && sponsoredData.ads.length > 0) {
+          html += sponsoredData.ads.map(ad => renderSponsored(ad)).join('');
+        }
+        
+        // Then show organic results
+        if (data.listings.length === 0 && sponsoredData.ads.length === 0) {
           container.innerHTML = '<div class="empty">No listings found. Try a different search.</div>';
           return;
         }
         
-        container.innerHTML = data.listings.map(listing => renderListing(listing)).join('');
+        html += data.listings.map(listing => renderListing(listing)).join('');
+        container.innerHTML = html;
         
       } catch (err) {
         console.error('Error fetching listings:', err);
         container.innerHTML = '<div class="empty">Error loading listings. Please try again.</div>';
       }
+    }
+    
+    function renderSponsored(ad) {
+      return `
+        <div class="listing-card sponsored" onclick="trackAdClick('${ad.campaign_id}', '${ad.listing_slug}')">
+          <div class="listing-header">
+            <div class="listing-title">
+              <span class="listing-icon">📢</span>
+              <span class="listing-name">${escapeHtml(ad.name)}</span>
+            </div>
+            <span class="listing-type">SPONSORED</span>
+          </div>
+          <p class="listing-desc">${escapeHtml(ad.description || '')}</p>
+          <div class="listing-meta">
+            <div class="listing-badges">
+              ${(ad.badges || []).map(b => `<span class="badge">${badgeIcon(b)} ${b}</span>`).join('')}
+            </div>
+            ${ad.avg_rating ? `<span class="listing-rating">★ ${parseFloat(ad.avg_rating).toFixed(1)}</span>` : ''}
+            <button class="copy-endpoint-btn" onclick="event.stopPropagation(); copyEndpoint('${ad.destination_url || '/listing/' + ad.listing_slug}', '${ad.campaign_id}')">📋 Copy Endpoint</button>
+          </div>
+        </div>
+      `;
+    }
+    
+    function trackAdClick(campaignId, slug) {
+      // Track the click
+      fetch('/api/ads/click', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ campaign_id: campaignId })
+      }).catch(() => {});
+      
+      // Show listing detail (for now just alert)
+      viewListing(slug);
+    }
+    
+    function copyEndpoint(url, campaignId) {
+      navigator.clipboard.writeText(url);
+      
+      // Track as click
+      if (campaignId) {
+        fetch('/api/ads/click', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ campaign_id: campaignId })
+        }).catch(() => {});
+      }
+      
+      // Show feedback
+      const btn = event.target;
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => { btn.textContent = '📋 Copy Endpoint'; }, 2000);
     }
     
     function renderListing(l) {
