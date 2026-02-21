@@ -3,19 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>API Directory — Girandole</title>
-  <meta name="description" content="Browse all agent-friendly APIs in the Girandole registry.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='20' stroke='%2394a3b8' stroke-width='2' fill='none'/><circle cx='32' cy='32' r='6' fill='%23dc2626'/><circle cx='32' cy='8' r='4' fill='%23dc2626'/><circle cx='32' cy='56' r='4' fill='%23dc2626'/><circle cx='8' cy='32' r='4' fill='%23dc2626'/><circle cx='56' cy='32' r='4' fill='%23dc2626'/><circle cx='15' cy='15' r='3' fill='%23dc2626' opacity='0.6'/><circle cx='49' cy='15' r='3' fill='%23dc2626' opacity='0.6'/><circle cx='15' cy='49' r='3' fill='%23dc2626' opacity='0.6'/><circle cx='49' cy='49' r='3' fill='%23dc2626' opacity='0.6'/></svg>">
+  <title>Directory — Girandole</title>
+  <meta name="description" content="Browse APIs, MCP servers, skills, agents, and more in the Girandole directory.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='20' stroke='%2394a3b8' stroke-width='2' fill='none'/><circle cx='32' cy='32' r='6' fill='%23dc2626'/></svg>">
   <style>
     :root {
       --bg: #0a0a0f;
       --bg-card: #12121a;
+      --bg-card-hover: #1a1a24;
       --text: #e8e6e3;
       --text-dim: #94a3b8;
       --accent: #dc2626;
       --accent-glow: #ef4444;
       --border: #2a2a35;
       --success: #22c55e;
+      --gold: #f59e0b;
+      --blue: #3b82f6;
+      --sponsored-bg: #1a1510;
+      --sponsored-border: #b45309;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -24,378 +29,437 @@
       color: var(--text);
       line-height: 1.6;
     }
-    .container { max-width: 900px; margin: 0 auto; padding: 2rem; }
     
-    /* Header */
-    .header {
+    /* Nav */
+    nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 2rem;
+      padding: 1.5rem 2rem;
       border-bottom: 1px solid var(--border);
-      margin-bottom: 2rem;
     }
-    .header .logo {
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      text-decoration: none;
-      color: var(--text);
+      gap: 0.5rem;
     }
-    .header .logo-icon { font-size: 1.5rem; }
-    .header .logo-text { font-size: 1.25rem; font-weight: 600; }
-    .header .logo-text span { color: var(--accent); }
-    .header nav { display: flex; gap: 1.5rem; }
-    .header nav a {
+    .logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a {
       color: var(--text-dim);
       text-decoration: none;
-      font-size: 0.9rem;
+      font-weight: 500;
     }
-    .header nav a:hover { color: var(--accent); }
+    .nav-links a:hover { color: var(--text); }
     
-    /* Filters */
-    .filters {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
+    /* Main */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    /* Search & Filters */
+    .search-section {
       margin-bottom: 2rem;
-    }
-    .filter-btn {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      color: var(--text-dim);
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-    .filter-btn:hover, .filter-btn.active {
-      border-color: var(--accent);
-      color: var(--accent);
     }
     .search-box {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .search-box input {
       flex: 1;
-      min-width: 200px;
+      padding: 0.9rem 1.25rem;
+      font-size: 1rem;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg-card);
+      color: var(--text);
+      outline: none;
+    }
+    .search-box input:focus { border-color: var(--accent); }
+    .search-box input::placeholder { color: var(--text-dim); }
+    .search-box button {
+      padding: 0.9rem 1.5rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .search-box button:hover { background: var(--accent-glow); }
+    
+    .filters {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
       padding: 0.5rem 1rem;
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 6px;
-      color: var(--text);
+      border-radius: 20px;
+      color: var(--text-dim);
       font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
     }
-    .search-box:focus {
-      outline: none;
+    .filter-btn:hover {
       border-color: var(--accent);
+      color: var(--text);
+    }
+    .filter-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
     }
     
-    /* Directory */
-    .directory-header {
+    /* Results */
+    .results-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
+      color: var(--text-dim);
+      font-size: 0.95rem;
     }
-    .directory-header h1 { font-size: 1.5rem; }
-    .api-count { color: var(--text-dim); font-size: 0.9rem; }
     
-    .api-card {
+    .listings {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    /* Listing Card */
+    .listing-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.25rem;
-      margin-bottom: 1rem;
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      transition: all 0.2s;
+      cursor: pointer;
     }
-    .api-card.sample {
-      border-style: dashed;
-      opacity: 0.7;
+    .listing-card:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
     }
-    .api-card.sample::after {
-      content: "SAMPLE";
+    .listing-card.sponsored {
+      background: var(--sponsored-bg);
+      border-color: var(--sponsored-border);
+    }
+    .listing-card.sponsored::before {
+      content: 'Sponsored';
       position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
-      background: var(--border);
-      color: var(--text-dim);
-      font-size: 0.6rem;
-      padding: 2px 6px;
-      border-radius: 3px;
+      top: -8px;
+      left: 12px;
+      background: var(--gold);
+      color: #000;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      text-transform: uppercase;
     }
-    .api-card { position: relative; }
-    .api-header {
+    .listing-card.sponsored {
+      position: relative;
+      margin-top: 8px;
+    }
+    
+    .listing-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.5rem;
     }
-    .api-info h3 { 
-      font-size: 1.1rem; 
-      margin-bottom: 0.25rem;
-    }
-    .api-badges {
+    .listing-title {
       display: flex;
-      gap: 0.4rem;
-      flex-wrap: wrap;
-    }
-    .badge {
-      display: inline-flex;
       align-items: center;
-      gap: 0.25rem;
-      background: #1a1a24;
+      gap: 0.6rem;
+    }
+    .listing-icon {
+      font-size: 1.4rem;
+    }
+    .listing-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    .listing-type {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      background: var(--bg);
       border: 1px solid var(--border);
       border-radius: 4px;
-      padding: 2px 6px;
-      font-size: 0.75rem;
       color: var(--text-dim);
+      text-transform: uppercase;
     }
-    .badge.verified { border-color: var(--success); color: var(--success); }
-    .badge.fast { border-color: #f59e0b; color: #f59e0b; }
-    .badge.claimed { border-color: #8b5cf6; color: #8b5cf6; }
-    .badge.featured { border-color: var(--accent); color: var(--accent); }
-    .badge.reliable { border-color: var(--success); color: var(--success); }
-    .badge.sample-badge { border-color: var(--border); color: var(--text-dim); }
-    .api-info .category {
-      color: var(--accent);
-      font-size: 0.85rem;
-      margin-bottom: 0.25rem;
-    }
-    .api-info p { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 0.75rem; }
-    .api-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-    }
-    .api-endpoint {
-      font-family: monospace;
-      font-size: 0.8rem;
-      background: #1a1a24;
-      padding: 0.5rem 0.75rem;
-      border-radius: 6px;
+    
+    .listing-desc {
       color: var(--text-dim);
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
     }
-    .api-health {
+    
+    .listing-meta {
       display: flex;
       gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .listing-badges {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .badge {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+    .listing-rating {
+      color: var(--gold);
+      font-size: 0.9rem;
+    }
+    .listing-reviews {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+    .listing-pricing {
       font-size: 0.8rem;
+      padding: 0.2rem 0.5rem;
+      background: var(--success);
+      color: #fff;
+      border-radius: 4px;
+      text-transform: capitalize;
+    }
+    .listing-pricing.usage { background: var(--blue); }
+    .listing-pricing.freemium { background: #6366f1; }
+    .listing-pricing.monthly, .listing-pricing.per_task { background: var(--gold); color: #000; }
+    
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 3rem;
       color: var(--text-dim);
     }
-    .api-health .online { color: var(--success); }
-    .api-health .sample { color: var(--text-dim); font-style: italic; }
+    .loading-spinner {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 1rem;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Empty state */
+    .empty {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-dim);
+    }
     
     /* Footer */
     footer {
-      text-align: center;
       padding: 2rem;
+      text-align: center;
       color: var(--text-dim);
       font-size: 0.9rem;
       border-top: 1px solid var(--border);
-      margin-top: 2rem;
+      margin-top: 3rem;
     }
     footer a { color: var(--accent); text-decoration: none; }
     
     @media (max-width: 600px) {
-      .header { flex-direction: column; gap: 1rem; }
-      .api-header { flex-direction: column; }
-      .api-meta { flex-direction: column; align-items: flex-start; }
+      .listing-header { flex-direction: column; gap: 0.5rem; }
+      .filters { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 0.5rem; }
     }
   </style>
 </head>
 <body>
+
+  <nav>
+    <a href="/" class="logo">🕯️ <span>Girandole</span></a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/demo-ads.html">How Ads Work</a>
+      <a href="/api/registry.json">API</a>
+    </div>
+  </nav>
+
   <div class="container">
-    <header class="header">
-      <a href="/" class="logo">
-        <span class="logo-icon">🕯️</span>
-        <span class="logo-text"><span>Girandole</span></span>
-      </a>
-      <nav>
-        <a href="/">Home</a>
-        <a href="/directory.html">Directory</a>
-        <a href="/#pricing">Pricing</a>
-        <a href="/#submit">List Your API</a>
-      </nav>
-    </header>
     
-    <div class="directory-header">
-      <h1>API Directory</h1>
-      <span class="api-count">6 APIs listed</span>
+    <section class="search-section">
+      <div class="search-box">
+        <input type="text" id="search-input" placeholder="Search APIs, MCP servers, skills, agents...">
+        <button onclick="doSearch()">Search</button>
+      </div>
+      <div class="filters">
+        <button class="filter-btn active" data-type="">All</button>
+        <button class="filter-btn" data-type="api">🔌 APIs</button>
+        <button class="filter-btn" data-type="mcp">🔗 MCP</button>
+        <button class="filter-btn" data-type="skill">📦 Skills</button>
+        <button class="filter-btn" data-type="agent">🤖 Agents</button>
+        <button class="filter-btn" data-type="data">📊 Data</button>
+        <button class="filter-btn" data-type="tool">🔧 Tools</button>
+      </div>
+    </section>
+    
+    <div class="results-header">
+      <span id="results-count">Loading...</span>
     </div>
     
-    <div class="filters">
-      <input type="text" class="search-box" placeholder="Search APIs..." id="search">
-      <button class="filter-btn active" data-category="all">All</button>
-      <button class="filter-btn" data-category="books">📚 Books</button>
-      <button class="filter-btn" data-category="products">🛍️ Products</button>
-      <button class="filter-btn" data-category="services">🔧 Services</button>
-      <button class="filter-btn" data-category="data">📊 Data</button>
-      <button class="filter-btn" data-category="tools">🛠️ Tools</button>
-      <button class="filter-btn" data-category="inference">🤖 AI</button>
-    </div>
-    
-    <div id="directory">
-      <!-- Real API -->
-      <div class="api-card" data-category="books">
-        <div class="api-header">
-          <div class="api-info">
-            <div class="category">📚 Books</div>
-            <h3>Jochem Family Press</h3>
-          </div>
-          <div class="api-badges">
-            <span class="badge verified">✓ Verified</span>
-            <span class="badge fast">⚡ Fast</span>
-            <span class="badge claimed">👤 Claimed</span>
-          </div>
-        </div>
-        <p>Memoir series about robotics, self-driving cars, small-town Indiana. Includes "Driven" — the story of No Hands Across America (1995).</p>
-        <div class="api-meta">
-          <code class="api-endpoint">jochemfamilypress.com/api/books.json</code>
-          <div class="api-health">
-            <span class="online">● Online</span>
-            <span>348ms avg</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Sample APIs -->
-      <div class="api-card sample" data-category="products">
-        <div class="api-header">
-          <div class="api-info">
-            <div class="category">🛍️ Products</div>
-            <h3>Artisan Coffee Co.</h3>
-          </div>
-          <div class="api-badges">
-            <span class="badge verified">✓ Verified</span>
-            <span class="badge sample-badge">Sample</span>
-          </div>
-        </div>
-        <p>Small-batch roasted coffee beans from around the world. API includes origins, roast profiles, tasting notes, and purchase links.</p>
-        <div class="api-meta">
-          <code class="api-endpoint">example.com/api/coffee.json</code>
-          <div class="api-health">
-            <span class="sample">Sample listing</span>
-          </div>
-        </div>
-      </div>
-      
-      <div class="api-card sample" data-category="data">
-        <div class="api-header">
-          <div class="api-info">
-            <div class="category">📊 Data</div>
-            <h3>Weather Trends API</h3>
-          </div>
-          <div class="api-badges">
-            <span class="badge verified">✓ Verified</span>
-            <span class="badge fast">⚡ Fast</span>
-            <span class="badge sample-badge">Sample</span>
-          </div>
-        </div>
-        <p>Historical weather data and forecasts. Agents can query by location to help users plan trips, events, or daily activities.</p>
-        <div class="api-meta">
-          <code class="api-endpoint">example.com/api/weather.json</code>
-          <div class="api-health">
-            <span class="sample">Sample listing</span>
-          </div>
-        </div>
-      </div>
-      
-      <div class="api-card sample" data-category="services">
-        <div class="api-header">
-          <div class="api-info">
-            <div class="category">🔧 Services</div>
-            <h3>Local Handyman Network</h3>
-          </div>
-          <div class="api-badges">
-            <span class="badge verified">✓ Verified</span>
-            <span class="badge claimed">👤 Claimed</span>
-            <span class="badge sample-badge">Sample</span>
-          </div>
-        </div>
-        <p>Connect with vetted local handymen for home repairs. API returns availability, ratings, specialties, and booking links by zip code.</p>
-        <div class="api-meta">
-          <code class="api-endpoint">example.com/api/handyman.json</code>
-          <div class="api-health">
-            <span class="sample">Sample listing</span>
-          </div>
-        </div>
-      </div>
-      
-      <div class="api-card sample" data-category="tools">
-        <div class="api-header">
-          <div class="api-info">
-            <div class="category">🛠️ Tools</div>
-            <h3>Code Snippet Library</h3>
-          </div>
-          <div class="api-badges">
-            <span class="badge verified">✓ Verified</span>
-            <span class="badge fast">⚡ Fast</span>
-            <span class="badge reliable">🟢 Reliable</span>
-            <span class="badge sample-badge">Sample</span>
-          </div>
-        </div>
-        <p>Curated code snippets for common programming tasks. Searchable by language, framework, and use case. MIT licensed.</p>
-        <div class="api-meta">
-          <code class="api-endpoint">example.com/api/snippets.json</code>
-          <div class="api-health">
-            <span class="sample">Sample listing</span>
-          </div>
-        </div>
-      </div>
-      
-      <div class="api-card sample" data-category="books">
-        <div class="api-header">
-          <div class="api-info">
-            <div class="category">📚 Books</div>
-            <h3>Indie Sci-Fi Catalog</h3>
-          </div>
-          <div class="api-badges">
-            <span class="badge verified">✓ Verified</span>
-            <span class="badge sample-badge">Sample</span>
-          </div>
-        </div>
-        <p>Independent science fiction and fantasy books. Includes synopses, author bios, reviews, and links to purchase direct from authors.</p>
-        <div class="api-meta">
-          <code class="api-endpoint">example.com/api/scifi-books.json</code>
-          <div class="api-health">
-            <span class="sample">Sample listing</span>
-          </div>
-        </div>
+    <div id="listings" class="listings">
+      <div class="loading">
+        <div class="loading-spinner"></div>
+        <p>Loading listings...</p>
       </div>
     </div>
     
-    <footer>
-      <p>Built by <a href="https://airatelier.ai">ai/r — Air Atelier</a></p>
-      <p style="margin-top: 0.5rem;"><a href="/#submit">List your API</a> — Sample listings shown for illustration</p>
-    </footer>
   </div>
-  
+
+  <footer>
+    <p>© 2026 Girandole · <a href="/">The Agent Economy Platform</a></p>
+  </footer>
+
   <script>
-    // Filter functionality
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const cards = document.querySelectorAll('.api-card');
-    const searchBox = document.getElementById('search');
+    const typeIcons = {
+      api: '🔌',
+      mcp: '🔗',
+      skill: '📦',
+      agent: '🤖',
+      data: '📊',
+      tool: '🔧'
+    };
     
-    filterBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        filterBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        filterCards();
+    let currentType = '';
+    let currentQuery = '';
+    
+    // Load initial listings
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check URL params
+      const params = new URLSearchParams(window.location.search);
+      currentType = params.get('type') || '';
+      currentQuery = params.get('q') || '';
+      
+      if (currentQuery) {
+        document.getElementById('search-input').value = currentQuery;
+      }
+      if (currentType) {
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.type === currentType);
+        });
+      }
+      
+      fetchListings();
+      
+      // Filter buttons
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentType = btn.dataset.type;
+          fetchListings();
+        });
+      });
+      
+      // Search on enter
+      document.getElementById('search-input').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') doSearch();
       });
     });
     
-    searchBox.addEventListener('input', filterCards);
+    function doSearch() {
+      currentQuery = document.getElementById('search-input').value.trim();
+      fetchListings();
+    }
     
-    function filterCards() {
-      const category = document.querySelector('.filter-btn.active').dataset.category;
-      const search = searchBox.value.toLowerCase();
+    async function fetchListings() {
+      const container = document.getElementById('listings');
+      container.innerHTML = '<div class="loading"><div class="loading-spinner"></div><p>Loading listings...</p></div>';
       
-      cards.forEach(card => {
-        const matchesCategory = category === 'all' || card.dataset.category === category;
-        const matchesSearch = !search || card.textContent.toLowerCase().includes(search);
-        card.style.display = matchesCategory && matchesSearch ? 'block' : 'none';
-      });
+      try {
+        let url = '/api/listings?limit=50';
+        if (currentType) url += `&type=${currentType}`;
+        if (currentQuery) url += `&q=${encodeURIComponent(currentQuery)}`;
+        
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        document.getElementById('results-count').textContent = 
+          `${data.total} listing${data.total !== 1 ? 's' : ''} found`;
+        
+        if (data.listings.length === 0) {
+          container.innerHTML = '<div class="empty">No listings found. Try a different search.</div>';
+          return;
+        }
+        
+        container.innerHTML = data.listings.map(listing => renderListing(listing)).join('');
+        
+      } catch (err) {
+        console.error('Error fetching listings:', err);
+        container.innerHTML = '<div class="empty">Error loading listings. Please try again.</div>';
+      }
+    }
+    
+    function renderListing(l) {
+      const icon = typeIcons[l.type] || '📄';
+      const badges = (l.badges || []).map(b => `<span class="badge">${badgeIcon(b)} ${b}</span>`).join('');
+      const rating = l.avg_rating ? `<span class="listing-rating">★ ${parseFloat(l.avg_rating).toFixed(1)}</span>` : '';
+      const reviews = l.review_count ? `<span class="listing-reviews">(${l.review_count} reviews)</span>` : '';
+      const pricing = l.pricing_model ? `<span class="listing-pricing ${l.pricing_model}">${l.pricing_model}</span>` : '';
+      
+      return `
+        <div class="listing-card" onclick="viewListing('${l.slug}')">
+          <div class="listing-header">
+            <div class="listing-title">
+              <span class="listing-icon">${icon}</span>
+              <span class="listing-name">${escapeHtml(l.name)}</span>
+            </div>
+            <span class="listing-type">${l.type}</span>
+          </div>
+          <p class="listing-desc">${escapeHtml(l.short_description || l.description || '').slice(0, 150)}</p>
+          <div class="listing-meta">
+            <div class="listing-badges">${badges}</div>
+            ${rating} ${reviews} ${pricing}
+          </div>
+        </div>
+      `;
+    }
+    
+    function badgeIcon(badge) {
+      const icons = {
+        verified: '✓',
+        fast: '⚡',
+        reliable: '🟢',
+        established: '🏛️',
+        'top-rated': '⭐'
+      };
+      return icons[badge] || '';
+    }
+    
+    function viewListing(slug) {
+      // For now, just show an alert. Later this could open a modal or detail page.
+      alert(`Listing: ${slug}\n\nDetailed view coming soon!`);
+    }
+    
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
     }
   </script>
+
 </body>
 </html>

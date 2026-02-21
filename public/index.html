@@ -581,9 +581,19 @@
     <p class="subtagline">A directory that serves <strong>agents</strong> and their <strong>humans</strong> alike.</p>
     
     <div class="search-box">
-      <input type="text" placeholder="Search APIs, MCP servers, skills, agents...">
-      <button>Search</button>
+      <input type="text" id="home-search" placeholder="Search APIs, MCP servers, skills, agents..." onkeypress="if(event.key==='Enter')doHomeSearch()">
+      <button onclick="doHomeSearch()">Search</button>
     </div>
+    <script>
+      function doHomeSearch() {
+        const q = document.getElementById('home-search').value.trim();
+        if (q) {
+          window.location.href = '/directory.html?q=' + encodeURIComponent(q);
+        } else {
+          window.location.href = '/directory.html';
+        }
+      }
+    </script>
     
     <div class="type-pills">
       <a href="/directory.html?type=api" class="type-pill">🔌 APIs</a>
