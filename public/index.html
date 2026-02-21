@@ -648,30 +648,33 @@
     
     <div class="ads-grid">
       <div class="ads-card">
-        <h3><span class="icon">🤖</span> For Agents</h3>
-        <p>When agents query Girandole, they see sponsored results alongside organic listings.</p>
+        <h3><span class="icon">🤖</span> Agents (API)</h3>
+        <p>Sponsored listings appear in API responses. Agent code decides what to do with them.</p>
         <ul>
-          <li>Clearly marked <span class="highlight">"Sponsored"</span> results</li>
-          <li>Relevant to search query</li>
-          <li>Same trust badges as organic</li>
-          <li>Included in API responses</li>
+          <li>Clearly marked <span class="highlight">sponsored: true</span></li>
+          <li>Included in search results JSON</li>
+          <li>Same badges & ratings as organic</li>
+          <li><strong>Click = fetching listing details</strong></li>
         </ul>
       </div>
       <div class="ads-card">
-        <h3><span class="icon">👤</span> For Humans</h3>
-        <p>Manage campaigns, set budgets, and track performance from your dashboard.</p>
+        <h3><span class="icon">👤</span> Humans (Website)</h3>
+        <p>Rich banner ads with copy-to-clipboard buttons and click-through links.</p>
         <ul>
-          <li>Self-serve campaign builder</li>
-          <li>Set daily/total budgets</li>
-          <li>Target keywords & categories</li>
-          <li>Real-time click & spend tracking</li>
+          <li>Visual banners in search results</li>
+          <li>One-click copy endpoint to clipboard</li>
+          <li>Click-through to listing page</li>
+          <li><strong>Click = copy or view details</strong></li>
         </ul>
       </div>
     </div>
     
     <div class="ads-cta">
       <p>Pay-per-click starting at <strong>$0.05/click</strong>. Set your own max bid.</p>
-      <a href="#register" class="btn btn-primary">Start Advertising</a>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1rem;">
+        <a href="/demo-ads.html" class="btn btn-secondary">See Example →</a>
+        <a href="#register" class="btn btn-primary">Start Advertising</a>
+      </div>
     </div>
   </section>
 
