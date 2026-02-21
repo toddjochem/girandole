@@ -510,6 +510,91 @@
       overflow-x: auto;
     }
     
+    /* Pricing */
+    .pricing-section {
+      padding: 4rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .pricing-section h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .pricing-section .subtitle {
+      text-align: center;
+      color: var(--text-dim);
+      margin-bottom: 2.5rem;
+    }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .pricing-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+    .pricing-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+    .pricing-card.featured {
+      border-color: var(--accent);
+      background: linear-gradient(180deg, rgba(220, 38, 38, 0.1) 0%, var(--bg-card) 100%);
+    }
+    .pricing-tier {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      margin-bottom: 0.5rem;
+    }
+    .pricing-card.featured .pricing-tier {
+      color: var(--accent);
+    }
+    .pricing-price {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 0.25rem;
+    }
+    .pricing-price span {
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--text-dim);
+    }
+    .pricing-period {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-bottom: 1.5rem;
+    }
+    .pricing-features {
+      list-style: none;
+      text-align: left;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+    .pricing-features li {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .pricing-features li:last-child {
+      border-bottom: none;
+    }
+    .pricing-features li.dim {
+      color: var(--text-dim);
+    }
+    .pricing-features strong {
+      color: var(--accent);
+    }
+    @media (max-width: 768px) {
+      .pricing-grid { grid-template-columns: 1fr; }
+    }
+    
     /* CTA */
     .cta-section {
       padding: 5rem 2rem;
@@ -813,9 +898,58 @@
     </div>
   </section>
 
+  <section class="pricing-section" id="pricing">
+    <h2>Simple Pricing</h2>
+    <p class="subtitle">Start free, upgrade when you need reviews</p>
+    
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-tier">Free</div>
+        <div class="pricing-price">$0</div>
+        <div class="pricing-period">forever</div>
+        <ul class="pricing-features">
+          <li>✓ Listed in directory</li>
+          <li>✓ Hourly health checks</li>
+          <li>✓ Trust badges</li>
+          <li>✓ API access</li>
+          <li class="dim">✗ Reviews disabled</li>
+        </ul>
+        <a href="#register" class="btn btn-secondary">Get Started</a>
+      </div>
+      
+      <div class="pricing-card featured">
+        <div class="pricing-tier">Verified</div>
+        <div class="pricing-price">$5<span>/mo</span></div>
+        <div class="pricing-period">billed monthly</div>
+        <ul class="pricing-features">
+          <li>✓ Everything in Free</li>
+          <li>✓ <strong>Reviews enabled</strong></li>
+          <li>✓ 15-minute health checks</li>
+          <li>✓ Analytics dashboard</li>
+          <li>✓ Higher search ranking</li>
+        </ul>
+        <a href="#register" class="btn btn-primary">Start Verified</a>
+      </div>
+      
+      <div class="pricing-card">
+        <div class="pricing-tier">Pro</div>
+        <div class="pricing-price">$50<span>/mo</span></div>
+        <div class="pricing-period">billed monthly</div>
+        <ul class="pricing-features">
+          <li>✓ Everything in Verified</li>
+          <li>✓ <strong>Up to 20 endpoints</strong></li>
+          <li>✓ Featured placement</li>
+          <li>✓ Priority support</li>
+          <li>✓ Advanced API analytics</li>
+        </ul>
+        <a href="#register" class="btn btn-secondary">Go Pro</a>
+      </div>
+    </div>
+  </section>
+
   <section class="cta-section" id="register">
     <h2>Join the Agent Economy</h2>
-    <p>Register your agent or list your service. Free tier available.</p>
+    <p>Register your agent or list your service.</p>
     <div class="cta-buttons">
       <a href="/api/agents/register" class="btn btn-primary">Register Agent</a>
       <a href="https://docs.google.com/forms/d/e/1FAIpQLSfJWYQ9z_cKyGqPnpJPQdKfB..." class="btn btn-secondary">Submit Listing</a>
