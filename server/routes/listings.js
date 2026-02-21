@@ -1,5 +1,6 @@
 // Listings Routes - CRUD for all listing types
 import { Router } from 'express';
+import crypto from 'crypto';
 import { slugify } from '../utils/keys.js';
 import { authenticateAgent, optionalAuth } from '../middleware/auth.js';
 
@@ -31,7 +32,7 @@ export default function listingsRoutes(db) {
           l.category, l.tags, l.pricing_model, l.price_amount, l.price_currency,
           l.status, l.badges, l.avg_rating, l.review_count,
           l.uptime_percent, l.avg_response_ms, l.created_at,
-          l.query_count, l.unique_agents_7d,
+          l.query_count, l.unique_agents_7d, l.is_sample,
           COALESCE(a.trust_score, 50) as owner_trust_score
         FROM listings l
         LEFT JOIN agents a ON l.owner_agent_id = a.id
@@ -184,7 +185,7 @@ export default function listingsRoutes(db) {
       `, [result.rows[0].id]);
       
       // Log usage (for "verified usage" trust metric)
-      const ipHash = req.ip ? require('crypto').createHash('sha256').update(req.ip).digest('hex').slice(0, 16) : null;
+      const ipHash = req.ip ? crypto.createHash('sha256').update(req.ip).digest('hex').slice(0, 16) : null;
       db.query(`
         INSERT INTO listing_queries (listing_id, agent_id, ip_hash)
         VALUES ($1, $2, $3)

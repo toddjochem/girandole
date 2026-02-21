@@ -153,6 +153,14 @@
       background: var(--sponsored-bg);
       border-color: var(--sponsored-border);
     }
+    .listing-card.sample {
+      opacity: 0.75;
+    }
+    .badge.sample {
+      background: #374151;
+      color: #9ca3af;
+      border-color: #4b5563;
+    }
     .listing-card.sponsored::before {
       content: 'Sponsored';
       position: absolute;
@@ -500,9 +508,10 @@
       const rating = l.avg_rating ? `<span class="listing-rating">★ ${parseFloat(l.avg_rating).toFixed(1)}</span>` : '';
       const reviews = l.review_count ? `<span class="listing-reviews">(${l.review_count} reviews)</span>` : '';
       const pricing = l.pricing_model ? `<span class="listing-pricing ${l.pricing_model}">${l.pricing_model}</span>` : '';
+      const sampleBadge = l.is_sample ? '<span class="badge sample">📋 SAMPLE</span>' : '';
       
       return `
-        <div class="listing-card" onclick="viewListing('${l.slug}')">
+        <div class="listing-card${l.is_sample ? ' sample' : ''}" onclick="viewListing('${l.slug}')">
           <div class="listing-header">
             <div class="listing-title">
               <span class="listing-icon">${icon}</span>
@@ -512,7 +521,7 @@
           </div>
           <p class="listing-desc">${escapeHtml(l.short_description || l.description || '').slice(0, 150)}</p>
           <div class="listing-meta">
-            <div class="listing-badges">${badges}</div>
+            <div class="listing-badges">${sampleBadge}${badges}</div>
             ${rating} ${reviews} ${pricing}
           </div>
         </div>
